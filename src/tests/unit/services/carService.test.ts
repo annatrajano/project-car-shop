@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { ZodError } from 'zod';
+import { ErrorTypes } from '../../../erros/catalog';
 import CarModel from '../../../models/CarModel';
 import CarService from '../../../services/CarService';
 import { carMock, carMockWithId, carMockGetAll} from '../../mocks/CarMoks';
@@ -12,6 +13,7 @@ describe('Tests for CarService', () => {
 	before(() => {
 		sinon.stub(carModel, 'create').resolves(carMockWithId);
 		sinon.stub(carModel, 'read').resolves(carMockGetAll);
+        sinon.stub(carModel, 'readOne').resolves(carMockWithId);
 	})
 	after(() => {
 		sinon.restore()
@@ -38,6 +40,23 @@ describe('Tests for CarService', () => {
 			const result = await carService.read();
 
 			expect(result).to.be.deep.equal(carMockGetAll);
+		});
+	});
+
+    describe('ReadOne Car', () => {
+
+		it('Success', async () => {
+			const result = await carService.readOne(carMockWithId._id);
+
+			expect(result).to.be.deep.equal(carMockWithId);
+		});
+
+		it('Failure', async () => {
+			try {
+				await carService.readOne(carMockWithId._id);
+			} catch (error:any) {
+				expect(error.message).to.be.deep.equal(ErrorTypes.EntityNotFound);
+			}
 		});
 	});
 

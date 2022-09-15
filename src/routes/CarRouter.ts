@@ -12,5 +12,6 @@ const carController = new CarController(carService);
 
 route.post('/', (req, res) => carController.create(req, res));
 route.get('/', (_req, res) => carController.read(res));
+route.get('/:id', (req, res) => carController.readOne(req, res));
 
 export default route;
