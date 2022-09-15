@@ -11,6 +11,7 @@ describe('Tests for CarModel', () => {
 		sinon.stub(Model, 'create').resolves(carMockWithId);
         sinon.stub(Model, 'find').resolves(carMockGetAll);
         sinon.stub(Model, 'findOne').resolves(carMockWithId);
+        sinon.stub(Model, 'findOneAndDelete').resolves(carMockWithId);
 
 	});
 
@@ -43,6 +44,21 @@ describe('Tests for CarModel', () => {
 		it('_id not found', async () => {
 			try {
 				await carModel.readOne('123ERRADO');
+			} catch (error: any) {
+				expect(error.message).to.be.eq('InvalidMongoId');
+			}
+		});
+	});
+
+    describe('Tests if it is possible to delete a vehicle (DELETE /cars/:id)', () => {
+		it('successfully removed', async () => {
+			const carRemoved = await carModel.delete(carMockWithId._id);
+			expect(carRemoved).to.be.an('object');
+		});
+
+		it('_id not found to remove', async () => {
+			try {
+				await carModel.delete('123ERRADO');
 			} catch (error: any) {
 				expect(error.message).to.be.eq('InvalidMongoId');
 			}

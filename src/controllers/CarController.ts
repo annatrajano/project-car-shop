@@ -3,7 +3,7 @@ import MongoController, { RequestWithBody, ResponseError } from './MongoControll
 import CarService from '../services/CarService';
 import { ICar } from '../interfaces/ICar';
 
-class CarController extends MongoController<ICar> {
+export class CarController extends MongoController<ICar> {
   private _route: string;
 
   constructor(
@@ -51,6 +51,21 @@ class CarController extends MongoController<ICar> {
 
       return car
         ? res.status(200).json(car)
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
+
+  delete = async (req: Request, res: Response<ICar | ResponseError >) => {
+    const { id } = req.params;
+    try {
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({ error: this.errors.invalidId });
+      }
+      const result = await this.service.delete(req.params.id);
+      return result
+        ? res.status(204).json()
         : res.status(404).json({ error: this.errors.notFound });
     } catch (error) {
       return res.status(500).json({ error: this.errors.internal });

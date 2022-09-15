@@ -14,6 +14,7 @@ describe('Tests for CarService', () => {
 		sinon.stub(carModel, 'create').resolves(carMockWithId);
 		sinon.stub(carModel, 'read').resolves(carMockGetAll);
         sinon.stub(carModel, 'readOne').resolves(carMockWithId);
+        sinon.stub(carModel, 'delete').resolves(carMockWithId);
 	})
 	after(() => {
 		sinon.restore()
@@ -57,6 +58,13 @@ describe('Tests for CarService', () => {
 			} catch (error:any) {
 				expect(error.message).to.be.deep.equal(ErrorTypes.EntityNotFound);
 			}
+		});
+	});
+
+    describe('Delete Car', () => {
+		it('Success', async () => {
+		  const carDeleted = await carService.delete('62cf1fc6498565d94eba52cd');
+		  expect(carDeleted).to.be.an('object');
 		});
 	});
 
