@@ -29,6 +29,13 @@ class CarController extends MongoController<ICar> {
 
     return res.status(201).json(car);
   };
+
+  read = async (
+    res: Response<ICar[] | ResponseError>,
+  ): Promise<typeof res> => {
+    const cars = await this.service.read();
+    return res.status(200).json(cars);
+  };
 }
 
 export default CarController;
