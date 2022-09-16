@@ -56,6 +56,21 @@ export class MotorcycleController extends MongoController<IMotorcycle> {
       return res.status(500).json({ error: this.errors.internal });
     }
   };
+
+  delete = async (req: Request, res: Response<IMotorcycle | ResponseError >) => {
+    const { id } = req.params;
+    try {
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        return res.status(400).json({ error: this.errors.invalidId });
+      }
+      const result = await this.service.delete(req.params.id);
+      return result
+        ? res.status(204).json()
+        : res.status(404).json({ error: this.errors.notFound });
+    } catch (error) {
+      return res.status(500).json({ error: this.errors.internal });
+    }
+  };
 }
 
 export default MotorcycleController;

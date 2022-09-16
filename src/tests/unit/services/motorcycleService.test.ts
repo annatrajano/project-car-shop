@@ -14,6 +14,7 @@ describe('Tests for MotorcycleService', () => {
 		sinon.stub(motorcyleModel, 'create').resolves(motorcycleMockWithId);
         sinon.stub(motorcyleModel, 'read').resolves(motorcycleMockGetAll);
         sinon.stub(motorcyleModel, 'readOne').resolves(motorcycleMockWithId);
+        sinon.stub(motorcyleModel, 'delete').resolves(motorcycleMockWithId);
 	})
 	after(() => {
 		sinon.restore()
@@ -59,6 +60,13 @@ describe('Tests for MotorcycleService', () => {
 			} catch (error:any) {
 				expect(error.message).to.be.deep.equal(ErrorTypes.EntityNotFound);
 			}
+		});
+	});
+
+    describe('Delete Motorcycle', () => {
+		it('Success', async () => {
+		  const carDeleted = await motorcyleService.delete('4edd40c86762e0fb12000003');
+		  expect(carDeleted).to.be.an('object');
 		});
 	});
 
