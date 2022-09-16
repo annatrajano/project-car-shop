@@ -9,7 +9,7 @@ const IMotorcycleSchema = z.object({
       required_error: 'EngineCapacity is required',
       invalid_type_error: 'EngineCapacity must be a number',
     })
-    .lte(2500, { message: 'EngineCapacity must be 2500 or less' }),
+    .lte(2500, { message: 'EngineCapacity must be 2500 or less' }).positive(),
 });
 
 const MotorcycleVehicle = z.intersection(IVehicleSchema, IMotorcycleSchema);
