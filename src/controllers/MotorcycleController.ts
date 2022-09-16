@@ -29,6 +29,13 @@ export class MotorcycleController extends MongoController<IMotorcycle> {
 
     return res.status(201).json(motorcycle);
   };
+
+  read = async (
+    res: Response<IMotorcycle[] | ResponseError>,
+  ): Promise<typeof res> => {
+    const motorcycles = await this.service.read();
+    return res.status(200).json(motorcycles);
+  };
 }
 
 export default MotorcycleController;

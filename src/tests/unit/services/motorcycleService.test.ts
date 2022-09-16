@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import { ZodError } from 'zod';
 import MotorcycleModel from '../../../models/MotorcycleModel';
 import MotorcyleService from '../../../services/MotorcycleService';
-import { motorcycleMock, motorcycleMockWithId } from '../../mocks/MotorcycleMocks';
+import { motorcycleMock, motorcycleMockWithId, motorcycleMockGetAll } from '../../mocks/MotorcycleMocks';
 
 describe('Tests for MotorcycleService', () => {
 	const motorcyleModel = new MotorcycleModel();
@@ -11,10 +11,13 @@ describe('Tests for MotorcycleService', () => {
  
 	before(() => {
 		sinon.stub(motorcyleModel, 'create').resolves(motorcycleMockWithId);
+        sinon.stub(motorcyleModel, 'read').resolves(motorcycleMockGetAll);
 	})
 	after(() => {
 		sinon.restore()
 	})
+
+
 	describe('Create Motorcycles', () => {
 		it('Success', async () => {
 			const result = await motorcyleService.create(motorcycleMock);
@@ -31,5 +34,14 @@ describe('Tests for MotorcycleService', () => {
 			}
 		});
 	});
+
+	describe('Read All Motorcycles', () => {
+		it('Success', async () => {
+			const result = await motorcyleService.read();
+
+			expect(result).to.be.deep.equal(motorcycleMockGetAll);
+		});
+	});
+    
 
 });
