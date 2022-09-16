@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { ZodError } from 'zod';
+import { ErrorTypes } from '../../../erros/catalog';
 import MotorcycleModel from '../../../models/MotorcycleModel';
 import MotorcyleService from '../../../services/MotorcycleService';
 import { motorcycleMock, motorcycleMockWithId, motorcycleMockGetAll } from '../../mocks/MotorcycleMocks';
@@ -12,6 +13,7 @@ describe('Tests for MotorcycleService', () => {
 	before(() => {
 		sinon.stub(motorcyleModel, 'create').resolves(motorcycleMockWithId);
         sinon.stub(motorcyleModel, 'read').resolves(motorcycleMockGetAll);
+        sinon.stub(motorcyleModel, 'readOne').resolves(motorcycleMockWithId);
 	})
 	after(() => {
 		sinon.restore()
@@ -43,5 +45,21 @@ describe('Tests for MotorcycleService', () => {
 		});
 	});
     
+    describe('ReadOne Motorcycle', () => {
+
+		it('Success', async () => {
+			const result = await motorcyleService.readOne(motorcycleMockWithId._id);
+
+			expect(result).to.be.deep.equal(motorcycleMockWithId);
+		});
+
+		it('Failure', async () => {
+			try {
+				await motorcyleService.readOne(motorcycleMockWithId._id);
+			} catch (error:any) {
+				expect(error.message).to.be.deep.equal(ErrorTypes.EntityNotFound);
+			}
+		});
+	});
 
 });

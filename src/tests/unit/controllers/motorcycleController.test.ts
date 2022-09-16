@@ -19,6 +19,7 @@ describe('Tests for MotorcycleController', () => {
   before(() => {
     sinon.stub(motorcycleService, 'create').resolves(motorcycleMockWithId);
     sinon.stub(motorcycleService, 'read').resolves(motorcycleMockGetAll);
+    sinon.stub(motorcycleService, 'readOne').resolves(motorcycleMockWithId);
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
@@ -45,6 +46,18 @@ describe('Tests for MotorcycleController', () => {
 
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
       expect((res.json as sinon.SinonStub).calledWith(motorcycleMockGetAll)).to.be.true;
+    });
+  });
+
+  describe('ReadOne Motorcycle', () => {
+    it('Success', async () => {
+      // como fizemos o dublê da service o valor do `req.params.id` não vai chegar na model
+      // logo ele só precisa ser um string e existir
+      req.params = { id: motorcycleMockWithId._id };
+      await motorcycleController.readOne(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(motorcycleMockWithId)).to.be.true;
     });
   });
 

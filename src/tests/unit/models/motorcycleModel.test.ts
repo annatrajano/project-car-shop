@@ -10,6 +10,7 @@ describe('Tests for MotorcycleModel', () => {
 	before(() => {
 		sinon.stub(Model, 'create').resolves(motorcycleMockWithId);
         sinon.stub(Model, 'find').resolves(motorcycleMockGetAll);
+        sinon.stub(Model, 'findOne').resolves(motorcycleMockWithId);
 
 	});
 
@@ -32,4 +33,19 @@ describe('Tests for MotorcycleModel', () => {
           expect(result).to.be.an('array');
         });
       });
+
+    describe('Tests if it is possible to list a motorcycle (GET /motorcycle/:id)', () => {
+		it('successfully found', async () => {
+			const result = await motorcycleModel.readOne('4edd40c86762e0fb12000003');
+			expect(result).to.be.deep.equal(motorcycleMockWithId);
+		});
+
+		it('_id not found', async () => {
+			try {
+				await motorcycleModel.readOne('123ERRADO');
+			} catch (error: any) {
+				expect(error.message).to.be.eq('InvalidMongoId');
+			}
+		});
+	});
 });

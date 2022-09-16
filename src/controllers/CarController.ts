@@ -38,7 +38,7 @@ export class CarController extends MongoController<ICar> {
   };
 
   readOne = async (
-    req: Request<{ id: string }>,
+    req: Request,
     res: Response<ICar | ResponseError>,
   ): Promise<typeof res> => {
     const { id } = req.params;

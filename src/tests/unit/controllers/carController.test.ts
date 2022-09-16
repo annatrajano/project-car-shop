@@ -51,6 +51,18 @@ describe('Tests for CarController', () => {
     });
   });
 
+  describe('ReadOne Car', () => {
+    it('Success', async () => {
+      // como fizemos o dublê da service o valor do `req.params.id` não vai chegar na model
+      // logo ele só precisa ser um string e existir
+      req.params = { id: carMockWithId._id };
+      await carController.readOne(req, res);
+
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(carMockWithId)).to.be.true;
+    });
+  });
+
   describe('Delete Car', () => {
     it('Success', async () => {
       req.params = { id: carMockWithId._id }
